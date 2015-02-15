@@ -294,6 +294,9 @@ public class LinkRequest {
             backward2.setStairs(e2.isStairs());
             backward1.setWheelchairAccessible(e2.isWheelchairAccessible());
             backward2.setWheelchairAccessible(e2.isWheelchairAccessible());
+            /*AGGIUNTA: metto la flag per le footway anche qui, per sicurezza*/
+            backward1.setFootWay(e2.isFootWay());
+            backward2.setFootWay(e2.isFootWay());
             addEdges(backward1, backward2);
         }
 
@@ -312,6 +315,10 @@ public class LinkRequest {
         forward1.setWheelchairAccessible(e1.isWheelchairAccessible());
         forward2.setWheelchairAccessible(e1.isWheelchairAccessible());
 
+        /*AGGIUNTA: metto la flag per le footway anche qui, per sicurezza*/
+        forward1.setFootWay(e1.isFootWay());
+        forward1.setFootWay(e1.isFootWay());
+        
         // swap the new split edge into the replacements list, and remove the old ones
         ListIterator<P2<StreetEdge>> it = replacement.listIterator();
         while (it.hasNext()) {

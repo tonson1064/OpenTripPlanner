@@ -77,7 +77,8 @@ public class StreetEdge extends Edge implements Cloneable {
     private static final int STAIRS_FLAG_INDEX = 4;
     private static final int SLOPEOVERRIDE_FLAG_INDEX = 5;
     private static final int WHEELCHAIR_ACCESSIBLE_FLAG_INDEX = 6;
-
+    /*AGGIUNTA: flag per la presenza di strade per pedoni*/
+    private static final int FOOTWAY_FLAG_INDEX = 7;
     /** back, roundabout, stairs, ... */
     private byte flags;
 
@@ -184,6 +185,14 @@ public class StreetEdge extends Edge implements Cloneable {
                 return false;
             }
         }
+        
+        /*AGGIUNTA: controllo che l'arco non sia una footway, se è così non lo considero*/
+       if(!options.permitFootway) {
+       		if(isFootWay()) {
+       			return false;
+       		}
+       }
+        
         return getPermission().allows(mode);
     }
 
@@ -672,6 +681,18 @@ public class StreetEdge extends Edge implements Cloneable {
 	    flags = BitSetUtils.set(flags, SLOPEOVERRIDE_FLAG_INDEX, slopeOverride);
 	}
 
+	/*AGGIUNTA: get e set per flag di footway*/
+	public boolean isFootWay() {
+		System.out.print(flags+"\n");
+		return BitSetUtils.get(flags, FOOTWAY_FLAG_INDEX);
+	}
+
+	public void setFootWay(boolean footWay) {
+	    flags = BitSetUtils.set(flags, FOOTWAY_FLAG_INDEX, footWay);
+	    System.out.print(flags+"\n");
+	}
+	
+	
     /**
      * Return the azimuth of the first segment in this edge in integer degrees clockwise from South.
      * TODO change everything to clockwise from North

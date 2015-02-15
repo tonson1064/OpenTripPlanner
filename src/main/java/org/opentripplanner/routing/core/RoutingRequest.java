@@ -400,6 +400,10 @@ public class RoutingRequest implements Cloneable, Serializable {
     /* Whether we are in "long-distance mode". This is currently a server-wide setting, but it could be made per-request. */
     public boolean longDistance = false;
 
+    /*AGGIUNTA: permette/blocca le strade con highway=footway*/
+
+    public boolean permitFootway=true; 
+    
     /* CONSTRUCTORS */
 
     /** Constructor for options; modes defaults to walk and transit */
@@ -504,6 +508,11 @@ public class RoutingRequest implements Cloneable, Serializable {
         this.wheelchairAccessible = wheelchairAccessible;
     }
 
+    /*AGGIUNTA: metodo set per permitFooway*/
+    public void setPermitFootway(boolean permitFootway) {
+        this.permitFootway = permitFootway;
+    }
+    
     /**
      * only allow traversal by the specified mode; don't allow walking bikes. This is used during contraction to reduce the number of possible paths.
      */
@@ -938,6 +947,8 @@ public class RoutingRequest implements Cloneable, Serializable {
                 && reverseOptimizeOnTheFly == other.reverseOptimizeOnTheFly
                 && ignoreRealtimeUpdates == other.ignoreRealtimeUpdates
                 && disableRemainingWeightHeuristic == other.disableRemainingWeightHeuristic
+                /*AGGIUNTA: footway*/
+                && permitFootway == other.permitFootway      
                 && Objects.equal(startingTransitTripId, other.startingTransitTripId);
     }
 

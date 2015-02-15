@@ -406,6 +406,50 @@ otp.widgets.tripoptions.TimeSelector =
 
 });
 
+//**FootwaySelector **//
+
+otp.widgets.tripoptions.FootwaySelector =
+    otp.Class(otp.widgets.tripoptions.TripOptionsWidgetControl, {
+
+    id           :  null,
+    //TRANSLATORS: label for checkbox
+    label        : _tr("Footway accesible trip:"),
+
+    initialize : function(tripWidget) {
+
+        otp.widgets.tripoptions.TripOptionsWidgetControl.prototype.initialize.apply(this, arguments);
+
+        this.id = tripWidget.id;
+
+
+        ich['otp-tripOptions-footway']({
+            widgetId : this.id,
+            label : this.label,
+        }).appendTo(this.$());
+
+    },
+
+    doAfterLayout : function() {
+        var this_ = this;
+
+        $("#"+this.id+"-footway-input").change(function() {
+            this_.tripWidget.module.permitFootway = this.checked;
+        });
+    },
+
+    restorePlan : function(data) {
+        if(data.queryParams.footway) {
+            $("#"+this.id+"-footway-input").prop("checked", data.queryParams.permitFootway);
+        }
+    },
+
+    isApplicableForMode : function(mode) {
+        //footway mode is shown on transit and walk trips that
+        //doesn't include a bicycle
+        return (otp.util.Itin.includesTransit(mode)  || mode == "WALK") && !otp.util.Itin.includesBicycle(mode);
+    }
+});
+
 
 //** WheelChairSelector **//
 

@@ -1081,6 +1081,19 @@ public class OpenStreetMapGraphBuilderImpl implements GraphBuilder {
                 customNamer.nameWithEdge(way, street);
             }
 
+            /*AGGIUNTA: attivo flag presenza footway, se è presente*/
+            //street.isFootWay();
+            if ("footway".equals(highway)) {
+            street.setFootWay(true);
+            //Aggiunta: per la mia sanità mentale, mi scrivo gli id delle strade con footway
+            //e i valori delle flag
+            //System.out.print(way.getId()+"\n");
+            //System.out.print("Footway flag value:"+ street.isFootWay() +"\n");
+            }
+            
+            //street.id=Long.toString(way.getId());
+            
+            
             return street;
         }
 

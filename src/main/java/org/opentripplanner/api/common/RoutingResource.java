@@ -301,6 +301,13 @@ public abstract class RoutingResource {
     @QueryParam("disableRemainingWeightHeuristic")
     protected List<Boolean> disableRemainingWeightHeuristic;
     
+    /*
+     * AGGIUNTA: parametro per decidere se voglio strade pedonali o meno
+     */
+    @DefaultValue ("false")
+    @QueryParam("footway") protected List<Boolean> permitFootway;
+    
+    
     /* 
      * somewhat ugly bug fix: the graphService is only needed here for fetching per-graph time zones. 
      * this should ideally be done when setting the routing context, but at present departure/
@@ -357,6 +364,8 @@ public abstract class RoutingResource {
                 request.setDateTime(d, t, tz);
             }
         }
+        /*AGGIUNTA: settaggio del campo permitFootway*/
+        request.setPermitFootway(get(permitFootway, n, request.permitFootway));
         request.setWheelchairAccessible(get(wheelchair, n, request.wheelchairAccessible));
         request.setNumItineraries(get(numItineraries, n, request.getNumItineraries()));
         request.setMaxWalkDistance(get(maxWalkDistance, n, request.getMaxWalkDistance()));
