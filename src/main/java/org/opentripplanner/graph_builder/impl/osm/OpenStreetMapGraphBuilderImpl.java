@@ -1091,12 +1091,63 @@ public class OpenStreetMapGraphBuilderImpl implements GraphBuilder {
             //System.out.print("Footway flag value:"+ street.isFootWay() +"\n");
             }
             
+            /*AGGIUNTA: qualcosa per verificare se uno dei nodi della way contiene una certa tag*/
+            if(wayContainsBollard(way)) {
+            	street.setContainsBollard(true);
+            }
+            
             //street.id=Long.toString(way.getId());
             
             
             return street;
         }
 
+        
+        /*AGGIUNTA: metodo provvisorio per vedere se riesco a trovare way contenenti delle bollard, e vedere se funziona*/
+        protected boolean wayContainsBollard(OSMWay way)
+        {
+        	boolean hasBollard=false;
+        	
+        	//Questo ciclo dovrebbe eliminare nodi duplicati
+        	ArrayList<Long> nodes = new ArrayList<Long>(way.getNodeRefs().size());
+            long last = -1;
+            double lastLat = -1, lastLon = -1;
+            String lastLevel = null;
+            for (long nodeId : way.getNodeRefs()) {
+                OSMNode node = osmdb.getNode(nodeId);
+                
+                boolean levelsDiffer = false;
+                String level = node.getTag("level");
+                if (lastLevel == null) {
+                    if (level != null) {
+                        levelsDiffer = true;
+                    }
+                } else {
+                    if (!lastLevel.equals(level)) {
+                        levelsDiffer = true;
+                    }
+                }
+                if (nodeId != last
+                        && (node.lat != lastLat || node.lon != lastLon || levelsDiffer))
+                    nodes.add(nodeId);
+                last = nodeId;
+                lastLon = node.lon;
+                lastLat = node.lat;
+                lastLevel = level;
+            }
+
+            for (long nodeId : way.getNodeRefs()) {
+            	OSMNode node = osmdb.getNode(nodeId);
+            	if(node.isBollard()) {
+            		//System.out.print("La way "+way.getId() +" contiene una bollard nel nodo "+ node.getId()+"\n");
+            		hasBollard=true;
+            		break;
+            	}
+            }
+        	
+            return hasBollard;
+        }
+        
         // TODO Set this to private once WalkableAreaBuilder is gone
         protected String getNameForWay(OSMWithTags way, String id) {
             String name = way.getAssumedName();
@@ -1184,6 +1235,12 @@ public class OpenStreetMapGraphBuilderImpl implements GraphBuilder {
                     }
                 }
 
+                //AGGIUNTA: test per vedere se trova le bollard
+                /*if(node.isBollard()) {
+                	System.out.print("Bollard:" );
+                	System.out.print(node.getId()+"\n");
+                }*/
+                
                 if (iv == null) {
                     iv = new IntersectionVertex(graph, label, coordinate.x, coordinate.y, label);
                     if (node.hasTrafficLight()) {

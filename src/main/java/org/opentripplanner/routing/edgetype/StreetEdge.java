@@ -79,8 +79,10 @@ public class StreetEdge extends Edge implements Cloneable {
     private static final int WHEELCHAIR_ACCESSIBLE_FLAG_INDEX = 6;
     /*AGGIUNTA: flag per la presenza di strade per pedoni*/
     private static final int FOOTWAY_FLAG_INDEX = 7;
+    /*AGGIUNTA: flag per indicare la presenza di un nodo bollard*/
+    private static final int CONTAINS_BOLLARD_FLAG_INDEX = 8;
     /** back, roundabout, stairs, ... */
-    private byte flags;
+    private short flags;
 
     /**
      * Length is stored internally as 32-bit fixed-point (millimeters). This allows edges of up to ~2100km.
@@ -329,6 +331,9 @@ public class StreetEdge extends Edge implements Cloneable {
             }
             weight = time;
             if (traverseMode.equals(TraverseMode.WALK)) {
+            	
+            	
+            	
                 // take slopes into account when walking
                 // FIXME: this causes steep stairs to be avoided. see #1297.
                 double costs = ElevationUtils.getWalkCostsForSlope(getDistance(), getMaxSlope());
@@ -337,6 +342,13 @@ public class StreetEdge extends Edge implements Cloneable {
                 double elevationUtilsSpeed = 4.0 / 3.0;
                 weight = costs * (elevationUtilsSpeed / speed);
                 time = weight; //treat cost as time, as in the current model it actually is the same (this can be checked for maxSlope == 0)
+                
+                if(containsBollard())
+            	{
+            		System.out.print("Questa strada contiene una bollard, raddoppiato il peso\n");
+            		weight=2*weight;
+            	}
+                
                 /*
                 // debug code
                 if(weight > 100){
@@ -683,15 +695,23 @@ public class StreetEdge extends Edge implements Cloneable {
 
 	/*AGGIUNTA: get e set per flag di footway*/
 	public boolean isFootWay() {
-		System.out.print(flags+"\n");
+		//System.out.print(flags+"\n");
 		return BitSetUtils.get(flags, FOOTWAY_FLAG_INDEX);
 	}
 
 	public void setFootWay(boolean footWay) {
 	    flags = BitSetUtils.set(flags, FOOTWAY_FLAG_INDEX, footWay);
-	    System.out.print(flags+"\n");
+	    //System.out.print(flags+"\n");
 	}
 	
+	/*AGGIUNTA: get e set per flag di bollard*/
+	public boolean containsBollard() {
+		return BitSetUtils.get(flags, CONTAINS_BOLLARD_FLAG_INDEX);
+	}
+	
+	public void setContainsBollard(boolean containsBollard) {
+		flags = BitSetUtils.set(flags, CONTAINS_BOLLARD_FLAG_INDEX, containsBollard);
+	}
 	
     /**
      * Return the azimuth of the first segment in this edge in integer degrees clockwise from South.

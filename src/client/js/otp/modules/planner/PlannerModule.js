@@ -34,6 +34,9 @@ otp.modules.planner.defaultQueryParams = {
     triangleSafetyFactor            : 0.334,
   //AGGIUNTA: per le footway, valore default true 
     footway							: false,
+  //AGGUINTA: per le bollard
+    allowBollard					:true,
+    
 }
 
 otp.modules.planner.PlannerModule =

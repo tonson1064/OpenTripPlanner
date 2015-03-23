@@ -404,6 +404,10 @@ public class RoutingRequest implements Cloneable, Serializable {
 
     public boolean permitFootway=true; 
     
+    /*AGGUINTA: permette/blocca il passaggio di tornelli*/
+    
+    public boolean permitBollards=true; 
+    
     /* CONSTRUCTORS */
 
     /** Constructor for options; modes defaults to walk and transit */

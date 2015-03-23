@@ -76,4 +76,10 @@ public class OSMNode extends OSMWithTags {
     public boolean isBikeRental() {
         return isTag("amenity", "bicycle_rental");
     }
+    
+    //AGGIUNTA: nel caso serva, per vedere se un nodo è un tornello
+    public boolean isBollard() {
+    	return isTag("barrier", "bollard");
+    }
+    
 }
