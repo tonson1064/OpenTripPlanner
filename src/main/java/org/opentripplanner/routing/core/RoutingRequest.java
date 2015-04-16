@@ -24,6 +24,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.QueryParam;
+
 import com.google.common.base.Objects;
 
 import org.onebusaway.gtfs.model.AgencyAndId;
@@ -408,6 +411,17 @@ public class RoutingRequest implements Cloneable, Serializable {
     
     public boolean permitBollards=true; 
     
+    //AGGIUNTA: metodi per preferenze
+    
+    public int permitCrossing=1;
+    public int permitBollard=2;
+    public int permitTurnstile=1;
+    public int permitCycleBarrier=1;
+    public int permitTrafficLightSound=1;
+    public int permitTrafficLightVibration=1;
+    public int permitTrafficLightVibrationFloor=1;
+    
+    
     /* CONSTRUCTORS */
 
     /** Constructor for options; modes defaults to walk and transit */
@@ -516,6 +530,79 @@ public class RoutingRequest implements Cloneable, Serializable {
     public void setPermitFootway(boolean permitFootway) {
         this.permitFootway = permitFootway;
     }
+    
+    /*AGGIUNTA: metodi get e set per le preferenze*/
+       
+    public int getPermitCrossing()
+    {
+    	return permitCrossing;
+    }
+    
+    public void setPermitCrossing(int permitCrossing)
+    {
+    	this.permitCrossing=permitCrossing;
+    }
+    
+    public int getPermitBollard()
+    {
+    	return permitBollard;
+    }
+    
+    public void setPermitBollard(int permitBollard)
+    {
+    	this.permitBollard=permitBollard;
+    }
+    
+    public int getPermitTurnstile()
+    {
+    	return permitTurnstile;
+    }
+    
+    public void setPermitTurnstile(int permitTurnstile)
+    {
+    	this.permitTurnstile=permitTurnstile;
+    }
+    
+    public int getPermitPermitCycleBarrier()
+    {
+    	return permitCycleBarrier;
+    }
+    
+    public void setPermitCycleBarrier(int permitCycleBarrier)
+    {
+    	this.permitCycleBarrier=permitCycleBarrier;
+    }
+    
+    public int getPermitTrafficLightSound()
+    {
+    	return permitTrafficLightSound;
+    }
+    
+    public void setPermitTrafficLightSound(int permitTrafficLightSound)
+    {
+    	this.permitTrafficLightSound=permitTrafficLightSound;
+    }
+    
+    public int getPermitTrafficLightVibration()
+    {
+    	return permitTrafficLightVibration;
+    }
+    
+    public void setPermitTrafficLightVibration(int permitTrafficLightVibration)
+    {
+    	this.permitTrafficLightVibration=permitTrafficLightVibration;
+    }
+    
+    public int getPermitTrafficLightVibrationFloor()
+    {
+    	return permitTrafficLightVibrationFloor;
+    }
+    
+    public void setPermitTrafficLightVibrationFloor(int permitTrafficLightVibrationFloor)
+    {
+    	this.permitTrafficLightVibrationFloor=permitTrafficLightVibrationFloor;
+    }
+    
     
     /**
      * only allow traversal by the specified mode; don't allow walking bikes. This is used during contraction to reduce the number of possible paths.
@@ -953,6 +1040,17 @@ public class RoutingRequest implements Cloneable, Serializable {
                 && disableRemainingWeightHeuristic == other.disableRemainingWeightHeuristic
                 /*AGGIUNTA: footway*/
                 && permitFootway == other.permitFootway      
+                
+                //AGGIUNTA: preferenze
+                
+                && permitCrossing == other.permitCrossing
+                && permitBollard == other.permitBollard
+                && permitTurnstile == other.permitTurnstile
+                && permitCycleBarrier == other.permitCycleBarrier
+                && permitTrafficLightSound == other.permitTrafficLightSound
+                && permitTrafficLightVibration == other.permitTrafficLightVibration
+                && permitTrafficLightVibrationFloor == other.permitTrafficLightVibrationFloor               
+                
                 && Objects.equal(startingTransitTripId, other.startingTransitTripId);
     }
 

@@ -1092,9 +1092,29 @@ public class OpenStreetMapGraphBuilderImpl implements GraphBuilder {
             }
             
             /*AGGIUNTA: qualcosa per verificare se uno dei nodi della way contiene una certa tag*/
-            if(wayContainsBollard(way)) {
+            /*if(wayContainsBollard(way)) {
             	street.setContainsBollard(true);
-            }
+            }*/
+            
+            //AGGIUNTA: controllo se è un crossing, nel caso controllo se contiene pure
+            if(way.isTag("footway", "crossing") || way.isTag("cycleway", "crossing"))
+       		{
+            	street.setCrossing(true);
+            	
+            	wayContainsTagInNode(way,"trafficlightsound");
+            	wayContainsTagInNode(way,"trafficlightvibration");
+            	wayContainsTagInNode(way,"trafficlightfloorvibration");
+            	
+       		}
+            
+            //AGGIUNTA controlli per tag contenuti nei nodi
+            
+            if(wayContainsTagInNode(way, "bollard"))
+            	street.setContainsBollard(true);
+            if(wayContainsTagInNode(way, "turnstile"))
+            	street.setContainsTurnstile(true);
+            if(wayContainsTagInNode(way, "cyclebarrier"))
+            	street.setContainsCycleBarrier(true);
             
             //street.id=Long.toString(way.getId());
             
@@ -1102,6 +1122,92 @@ public class OpenStreetMapGraphBuilderImpl implements GraphBuilder {
             return street;
         }
 
+        protected boolean wayContainsTagInNode(OSMWay way, String Tag)
+        {
+        	boolean hasTag=false;
+        	
+        	//Questo ciclo dovrebbe eliminare nodi duplicati
+        	ArrayList<Long> nodes = new ArrayList<Long>(way.getNodeRefs().size());
+            long last = -1;
+            double lastLat = -1, lastLon = -1;
+            String lastLevel = null;
+            for (long nodeId : way.getNodeRefs()) {
+                OSMNode node = osmdb.getNode(nodeId);
+                
+                boolean levelsDiffer = false;
+                String level = node.getTag("level");
+                if (lastLevel == null) {
+                    if (level != null) {
+                        levelsDiffer = true;
+                    }
+                } else {
+                    if (!lastLevel.equals(level)) {
+                        levelsDiffer = true;
+                    }
+                }
+                if (nodeId != last
+                        && (node.lat != lastLat || node.lon != lastLon || levelsDiffer))
+                    nodes.add(nodeId);
+                last = nodeId;
+                lastLon = node.lon;
+                lastLat = node.lat;
+                lastLevel = level;
+            }
+
+            boolean foundit=false;
+            
+            for (long nodeId : way.getNodeRefs()) {
+            	OSMNode node = osmdb.getNode(nodeId);
+            	
+            	switch(Tag)
+            	{
+            		case "bollard":
+            			
+            			if(node.isTag("barrier", "bollard"))
+            				foundit=true;
+            			break;
+            			
+            		case "turnstile":
+            			
+            			if(node.isTag("barrier", "turnstile"))
+            				foundit=true;
+            			break;
+            			
+            		case "cyclebarrier":
+            			
+            			if(node.isTag("barrier", "cycle_barrier"))
+            				foundit=true;
+            			break;
+            			
+            		case "trafficlightsound":
+            			
+            			if(node.isTag("traffic_signals:sound", "yes"))
+            				foundit=true;
+            			break;
+            			
+            		case "trafficlightvibration":
+            			
+            			if(node.isTag("traffic_signals:vibration", "yes"))
+            				foundit=true;
+            			break;
+            			
+            		case "trafficlightfloorvibration":
+            			
+            			if(node.isTag("traffic_signals:floor_vibration", "yes"))
+            				foundit=true;
+            			break;
+            	}
+            	
+            	
+            	if(foundit) {
+            		hasTag=true;
+            		break;
+            	}
+            }
+        	
+            return hasTag;
+        }
+        
         
         /*AGGIUNTA: metodo provvisorio per vedere se riesco a trovare way contenenti delle bollard, e vedere se funziona*/
         protected boolean wayContainsBollard(OSMWay way)

@@ -37,6 +37,16 @@ otp.modules.planner.defaultQueryParams = {
   //AGGUINTA: per le bollard
     allowBollard					:true,
     
+    //AGGIUNTA: tutta la roba per i permessi
+    permitCrossing					:1,
+    permitBollard					:1,
+    permitTurnstile					:1,
+    permitCycleBarrier				:1,
+    permitTrafficLightSound			:1,
+    permitTrafficLightVibration		:1,
+    permitTrafficLightVibrationFloor :1,
+    
+    
 }
 
 otp.modules.planner.PlannerModule =
