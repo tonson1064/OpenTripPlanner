@@ -316,10 +316,12 @@ public abstract class RoutingResource {
     
     
     //AGGIUNTA: parametri preferenza
+    @DefaultValue("-1") @QueryParam("permitStairs") protected List<Integer> permitStairs;
     @DefaultValue("-1") @QueryParam("permitCrossing") protected List<Integer> permitCrossing;
     @DefaultValue("-1") @QueryParam("permitBollard") protected List<Integer> permitBollard;
     @DefaultValue("-1") @QueryParam("permitTurnstile") protected List<Integer> permitTurnstile;
     @DefaultValue("-1") @QueryParam("permitCycleBarrier") protected List<Integer> permitCycleBarrier;
+    @DefaultValue("-1") @QueryParam("permitTrafficLight") protected List<Integer> permitTrafficLight;
     @DefaultValue("-1") @QueryParam("permitTrafficLightSound") protected List<Integer> permitTrafficLightSound;
     @DefaultValue("-1") @QueryParam("permitTrafficLightVibration") protected List<Integer> permitTrafficLightVibration;
     @DefaultValue("-1") @QueryParam("permitTrafficLightVibrationFloor") protected List<Integer> permitTrafficLightVibrationFloor;
@@ -381,32 +383,38 @@ public abstract class RoutingResource {
             }
         }
         /*AGGIUNTA: settaggio del campo permitFootway e delle preferenze*/
+        request.setPermitStairs(get(permitStairs, n, request.permitStairs));
         request.setPermitCrossing(get(permitCrossing, n, request.permitCrossing));
         request.setPermitBollard(get(permitBollard, n, request.permitBollard));
         request.setPermitCycleBarrier(get(permitCycleBarrier, n, request.permitCycleBarrier));
         request.setPermitTurnstile(get(permitTurnstile, n , request.permitTurnstile));
+        request.setPermitTrafficLight(get(permitTrafficLight, n, request.permitTrafficLight));
         request.setPermitTrafficLightSound(get(permitTrafficLightSound, n, request.permitTrafficLightSound));
         request.setPermitTrafficLightVibration(get(permitTrafficLightVibration, n, request.permitTrafficLightVibration));
         request.setPermitTrafficLightVibrationFloor(get(permitTrafficLightVibrationFloor, n, request.permitTrafficLightVibrationFloor));
         
-        System.out.print("Contenuto request:\n"+ 
+        /*System.out.print("Contenuto request:\n"+ 
+        				  "Stairs:" + request.permitStairs + "\n" +
         				  "Crossing:" + request.permitCrossing + "\n" +
         				  "Bollard:" + request.permitBollard + "\n" +
         				  "Cyclebarrier:" + request.permitCycleBarrier + "\n" +
         				  "Turnstile:" + request.permitTurnstile + "\n" +
+        				  "TrafficLight:" + request.permitTrafficLight + "\n" +
         				  "TrafficLightSound:" + request.permitTrafficLightSound + "\n" +
         				  "TrafficLightVibration:" + request.permitTrafficLightVibration + "\n" +
         				  "TrafficLightVibrationFloor:" + request.permitTrafficLightVibrationFloor + "\n");
         
         System.out.print("Contenuto della form:\n"+ 
+        		  "Stairs:" + permitStairs + "\n" +
 				  "Crossing:" + permitCrossing + "\n" +
 				  "Bollard:" + permitBollard + "\n" +
 				  "Cyclebarrier:" + permitCycleBarrier + "\n" +
 				  "Turnstile:" + permitTurnstile + "\n" +
+				  "TrafficLight:" + permitTrafficLight + "\n" +
 				  "TrafficLightSound:" + permitTrafficLightSound + "\n" +
 				  "TrafficLightVibration:" + permitTrafficLightVibration + "\n" +
 				  "TrafficLightVibrationFloor:" + permitTrafficLightVibrationFloor + "\n");
-        
+        */
         
         request.setPermitFootway(get(permitFootway, n, request.permitFootway));
         request.setWheelchairAccessible(get(wheelchair, n, request.wheelchairAccessible));

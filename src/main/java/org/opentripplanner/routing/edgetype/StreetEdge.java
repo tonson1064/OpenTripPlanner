@@ -86,9 +86,10 @@ public class StreetEdge extends Edge implements Cloneable {
     private static final int CONTAINS_BOLLARD_FLAG_INDEX = 9;
     private static final int CONTAINS_TURNSTILE_FLAG_INDEX = 10;
     private static final int CONTAINS_CYCLEBARRIER_FLAG_INDEX = 11;
-    private static final int CONTAINS_TRAFFICLIGHT_SOUND_FLAG_INDEX = 12;
-    private static final int CONTAINS_TRAFFICLIGHT_VIBRATION_FLAG_INDEX = 13;
-    private static final int CONTAINS_TRAFFICLIGHT_FLOORVIBRATION_FLAG_INDEX = 14;
+    private static final int CONTAINS_TRAFFICLIGHT_FLAG_INDEX=12; 
+    private static final int CONTAINS_TRAFFICLIGHT_SOUND_FLAG_INDEX = 13;
+    private static final int CONTAINS_TRAFFICLIGHT_VIBRATION_FLAG_INDEX = 14;
+    private static final int CONTAINS_TRAFFICLIGHT_FLOORVIBRATION_FLAG_INDEX = 15;
     
     
     /** back, roundabout, stairs, ... */
@@ -207,37 +208,76 @@ public class StreetEdge extends Edge implements Cloneable {
         
         //AGGIUNTA: controllo se l'arco contiene una delle preferenze e non vogliamo attraversarla
         
-        System.out.print("Contenuto delle opzioni dell'arco:\n"+         
+        /*System.out.print("Contenuto delle opzioni dell'arco:\n"+  
+        		  "Stairs:" + options.permitStairs + "\n" +
 				  "Crossing:" + options.permitCrossing + "\n" +
 				  "Bollard:" + options.permitBollard + "\n" +
 				  "Cyclebarrier:" + options.permitCycleBarrier + "\n" +
 				  "Turnstile:" + options.permitTurnstile + "\n" +
+				  "TrafficLight:" + options.permitTrafficLight + "\n" +
 				  "TrafficLightSound:" + options.permitTrafficLightSound + "\n" +
 				  "TrafficLightVibration:" + options.permitTrafficLightVibration + "\n" +
 				  "TrafficLightVibrationFloor:" + options.permitTrafficLightVibrationFloor + "\n\n");
         
         System.out.print("Tipo di arco:\n"+         
+        		  "Stairs:" + isStairs() + "\n" +
 				  "Crossing:" + isCrossing() + "\n" +
 				  "Bollard:" + containsBollard() + "\n" +
 				  "Cyclebarrier:" + containsCycleBarrier() + "\n" +
 				  "Turnstile:" + containsTurnstile() + "\n" +
+				  "TrafficLight:" + containsTrafficLight() + "\n" +
 				  "TrafficLightSound:" + containsTrafficLightSound() + "\n" +
 				  "TrafficLightVibration:" + containsTrafficLightVibration() + "\n" +
-				  "TrafficLightVibrationFloor:" + containsTrafficLightVibrationFloor() + "\n\n");
+				  "TrafficLightVibrationFloor:" + containsTrafficLightVibrationFloor() + "\n\n");*/
 
-        
-        if(   (options.permitCrossing==-1 && isCrossing()) 
+        /*
+        if(   (options.permitCrossing==-1 && isCrossing())
+        	||(options.permitStairs==-1 && isStairs())	
         	||(options.permitBollard==-1 && containsBollard())
         	||(options.permitCycleBarrier==-1 && containsCycleBarrier())
         	||(options.permitTurnstile==-1 && containsTurnstile())
+        	||(options.permitTrafficLight==-1 && containsTrafficLight())
         	||(options.permitTrafficLightSound==-1 && containsTrafficLightSound())
         	||(options.permitTrafficLightVibration==-1 && containsTrafficLightVibration())
         	||(options.permitTrafficLightVibrationFloor==-1 && containsTrafficLightVibrationFloor())
-        ) {
+          )
+        {
         	
         	return false;
         }
+        */
+        //Rivisti controlli per verificare agibilità dell'arco
+        if(isCrossing())
+        {
+        	if(options.permitCrossing==-1)
+        		return false;
+        	else
+        	{
+        		if(	(options.permitTrafficLightSound==-1 && containsTrafficLightSound())
+        			||(options.permitTrafficLightVibration==-1 && containsTrafficLightVibration())
+        	        ||(options.permitTrafficLightVibrationFloor==-1 && containsTrafficLightVibrationFloor())
+        	      )
+        	    {
+        			return false;
+        	    }
+        	}
         	
+        }
+        else
+        {
+        	if(    	(options.permitStairs==-1 && isStairs())	
+                	||(options.permitBollard==-1 && containsBollard())
+                	||(options.permitCycleBarrier==-1 && containsCycleBarrier())
+                	||(options.permitTurnstile==-1 && containsTurnstile())
+                	||(options.permitTrafficLight==-1 && containsTrafficLight())
+              )
+            {
+        		return false;
+            }
+        }
+        
+        
+        
         return getPermission().allows(mode);
     }
 
@@ -389,6 +429,25 @@ public class StreetEdge extends Edge implements Cloneable {
                 
                 double mult=1.0;
                 
+                if (isStairs()) {
+                	
+                	switch(options.permitStairs)
+                	{
+                		case 0:
+                			mult*=2.0;
+                		break;
+                		case 1:
+                			mult*=1.0;
+                		break;
+                		case 2:
+                			mult*=0.5;
+                		break;
+                		default:
+                			mult*=1.0;
+                		break;
+                	}
+                }
+                
                 if(isCrossing())
                 {
                 	switch(options.permitCrossing)
@@ -446,6 +505,7 @@ public class StreetEdge extends Edge implements Cloneable {
                     	
                     }
                 	
+                	
                 	if(containsTrafficLightVibrationFloor())
                     {
                     	switch(options.permitTrafficLightVibrationFloor)
@@ -466,6 +526,26 @@ public class StreetEdge extends Edge implements Cloneable {
                     	
                     }
                 	                	
+                }
+                
+                if(containsTrafficLight())
+                {
+                	switch(options.permitTrafficLight)
+                	{
+                		case 0:
+                			mult*=2.0;
+                		break;
+                		case 1:
+                			mult*=1.0;
+                		break;
+                		case 2:
+                			mult*=0.5;
+                		break;
+                		default:
+                			mult*=1.0;
+                		break;
+                	}
+                	
                 }
                 
                 if(containsBollard())
@@ -529,8 +609,8 @@ public class StreetEdge extends Edge implements Cloneable {
                 	
                 }
                 
-                System.out.print("valore del moltiplicatore: "+ mult+ "\n");
-                System.out.print("valore del peso dell'arco: "+ weight+"\n\n");
+                //System.out.print("valore del moltiplicatore: "+ mult+ "\n");
+                //System.out.print("valore del peso dell'arco: "+ weight+"\n\n");
                 
                 weight*=mult;
                 
@@ -933,6 +1013,14 @@ public class StreetEdge extends Edge implements Cloneable {
 	
 	public void setContainsCycleBarrier(boolean containsCycleBarrier) {
 		flags = BitSetUtils.set(flags, CONTAINS_CYCLEBARRIER_FLAG_INDEX, containsCycleBarrier);
+	}
+	
+	public boolean containsTrafficLight() {
+		return BitSetUtils.get(flags, CONTAINS_TRAFFICLIGHT_FLAG_INDEX);
+	}
+	
+	public void setContainsTrafficLight(boolean containsTrafficLight) {
+		flags = BitSetUtils.set(flags, CONTAINS_TRAFFICLIGHT_FLAG_INDEX, containsTrafficLight);
 	}
 	
 	public boolean containsTrafficLightSound() {

@@ -33,15 +33,17 @@ otp.modules.planner.defaultQueryParams = {
     triangleSlopeFactor             : 0.333,
     triangleSafetyFactor            : 0.334,
   //AGGIUNTA: per le footway, valore default true 
-    footway							: false,
+    footway							: true,
   //AGGUINTA: per le bollard
     allowBollard					:true,
     
     //AGGIUNTA: tutta la roba per i permessi
+    permitStairs					:1,
     permitCrossing					:1,
     permitBollard					:1,
     permitTurnstile					:1,
     permitCycleBarrier				:1,
+    permitTrafficLight				:1,
     permitTrafficLightSound			:1,
     permitTrafficLightVibration		:1,
     permitTrafficLightVibrationFloor :1,

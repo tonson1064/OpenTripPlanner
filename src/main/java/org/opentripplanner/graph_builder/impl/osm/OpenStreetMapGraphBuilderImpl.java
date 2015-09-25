@@ -1096,14 +1096,21 @@ public class OpenStreetMapGraphBuilderImpl implements GraphBuilder {
             	street.setContainsBollard(true);
             }*/
             
-            //AGGIUNTA: controllo se è un crossing, nel caso controllo se contiene pure
+            /*AGGIUNTA: controllo la presenza di un semaforo*/
+            if(wayContainsTagInNode(way, "trafficlight"))
+            	street.setContainsTrafficLight(true);
+            
+            //AGGIUNTA: controllo se è un crossing, nel caso controllo se contiene pure semafori speciali
             if(way.isTag("footway", "crossing") || way.isTag("cycleway", "crossing"))
        		{
             	street.setCrossing(true);
             	
-            	wayContainsTagInNode(way,"trafficlightsound");
-            	wayContainsTagInNode(way,"trafficlightvibration");
-            	wayContainsTagInNode(way,"trafficlightfloorvibration");
+            	if(wayContainsTagInNode(way,"trafficlightsound"))
+            		street.setContainsTrafficLightSound(true);
+            	if(wayContainsTagInNode(way,"trafficlightvibration"))
+            		street.setContainsTrafficLightVibration(true);;
+            	if(wayContainsTagInNode(way,"trafficlightfloorvibration"))
+            		street.setContainsTrafficLightVibrationFloor(true);
             	
        		}
             
@@ -1176,6 +1183,12 @@ public class OpenStreetMapGraphBuilderImpl implements GraphBuilder {
             		case "cyclebarrier":
             			
             			if(node.isTag("barrier", "cycle_barrier"))
+            				foundit=true;
+            			break;
+            			
+            		case "trafficlight":
+            			
+            			if(node.isTag("highway", "traffic_signals") || node.isTag("crossing", "traffic_signals"))
             				foundit=true;
             			break;
             			

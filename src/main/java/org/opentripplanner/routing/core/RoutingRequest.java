@@ -412,16 +412,59 @@ public class RoutingRequest implements Cloneable, Serializable {
     public boolean permitBollards=true; 
     
     //AGGIUNTA: metodi per preferenze
-    
+    /*
+    public int permitStairs=1;
     public int permitCrossing=1;
-    public int permitBollard=2;
+    public int permitBollard=1;
     public int permitTurnstile=1;
     public int permitCycleBarrier=1;
+    public int permitTrafficLight=1;
+    public int permitTrafficLightSound=1;
+    public int permitTrafficLightVibration=1;
+    public int permitTrafficLightVibrationFloor=1;
+    */
+    
+    //AGGIUNTA valori settati per i profili utente
+    //SEDIA A ROTELLE
+    
+    public int permitStairs=-1;
+    public int permitCrossing=2;
+    public int permitBollard=-1;
+    public int permitTurnstile=-1;
+    public int permitCycleBarrier=-1;
+    public int permitTrafficLight=2;
     public int permitTrafficLightSound=1;
     public int permitTrafficLightVibration=1;
     public int permitTrafficLightVibrationFloor=1;
     
     
+    //NON VEDENTE
+    /*
+    public int permitStairs=1;
+    public int permitCrossing=1;
+    public int permitBollard=0;
+    public int permitTurnstile=0;
+    public int permitCycleBarrier=0;
+    public int permitTrafficLight=2;
+    public int permitTrafficLightSound=2;
+    public int permitTrafficLightVibration=2;
+    public int permitTrafficLightVibrationFloor=2;
+    */
+    
+    //CORRIDORE
+    /*
+    public int permitStairs=2;
+    public int permitCrossing=1;
+    public int permitBollard=1;
+    public int permitTurnstile=1;
+    public int permitCycleBarrier=1;
+    public int permitTrafficLight=0;
+    public int permitTrafficLightSound=1;
+    public int permitTrafficLightVibration=1;
+    public int permitTrafficLightVibrationFloor=1;
+    */
+    
+
     /* CONSTRUCTORS */
 
     /** Constructor for options; modes defaults to walk and transit */
@@ -533,6 +576,17 @@ public class RoutingRequest implements Cloneable, Serializable {
     
     /*AGGIUNTA: metodi get e set per le preferenze*/
        
+    public int getPermitStairs()
+    {
+    	return permitStairs;
+    }
+    
+    public void setPermitStairs(int permitStairs)
+    {
+    	this.permitStairs=permitStairs;
+    }
+    
+    
     public int getPermitCrossing()
     {
     	return permitCrossing;
@@ -572,6 +626,17 @@ public class RoutingRequest implements Cloneable, Serializable {
     {
     	this.permitCycleBarrier=permitCycleBarrier;
     }
+    
+    public int getPermitTrafficLight()
+    {
+    	return permitTrafficLightSound;
+    }
+    
+    public void setPermitTrafficLight(int permitTrafficLight)
+    {
+    	this.permitTrafficLight=permitTrafficLight;
+    }
+    
     
     public int getPermitTrafficLightSound()
     {
